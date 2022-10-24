@@ -1,8 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React from 'react'
-import { theme } from '../Theme'
+import { StyleSheet, Text, TouchableOpacity, View, Image, Modal } from 'react-native'
+import React, {useState} from 'react'
+import { theme } from '../Theme';
+import ProfileInfo from './ProfileInfo'
 
 const ConversationItem = ({ picture, username, bio, lastMessage, time, isBlocked, isMuted, hasStory, notifications }) => {
+
+  const [modalVisible, setModalVisible] = useState(false)
 
   const showStoryCircle = () => {
     if(hasStory) {
@@ -30,7 +33,7 @@ const ConversationItem = ({ picture, username, bio, lastMessage, time, isBlocked
   return (
     <View style={styles.container} >
       <TouchableOpacity style={styles.conversation}>
-        <TouchableOpacity style={[styles.imageContainer, showStoryCircle()]} >
+        <TouchableOpacity onPress={() => setModalVisible(currentValue => !currentValue)} style={[styles.imageContainer, showStoryCircle()]} >
           <Image style={styles.image} source={picture} />
         </TouchableOpacity>
         <View 
@@ -49,6 +52,16 @@ const ConversationItem = ({ picture, username, bio, lastMessage, time, isBlocked
           </View>
         </View>
       </TouchableOpacity>
+      <Modal animationType="slide" transparent visible={modalVisible}>
+        <ProfileInfo 
+          username={username}
+          picture={picture}
+          bio={bio}
+          isBlocked={isBlocked}
+          isMuted={isMuted}
+          hide={() => setModalVisible(false)}
+        />
+      </Modal>
     </View>
   )
 }
