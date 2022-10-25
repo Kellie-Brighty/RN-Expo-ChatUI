@@ -1,9 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react';
+import { FlingGestureHandler, State, Directions } from 'react-native-gesture-handler';
+import Animated, {withSpring, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
 
 import { theme } from '../../Theme';
 
-const Message = ({ time, isLeft, message }) => {
+const Message = ({ time, isLeft, message, onSwipe }) => {
+    const startingPosition = 0;
+    const x = useSharedValue(startingPosition)
 
     const isOnleft = (type) => {
         if(isLeft && type === "messageContainer") {
@@ -27,17 +31,45 @@ const Message = ({ time, isLeft, message }) => {
         }
     } 
 
+    const eventHandler = useAnimatedGestureHandler({
+        onStart: (event, ctx) => {
+
+        },
+        onActive: (event, ctx) => {
+            x.value = isLeft ? 50 : -50;
+        },
+        onEnd: (event, ctx) => {
+            x.value = withSpring(startingPosition)
+        }
+    })
+
+    const uas = useAnimatedStyle(() => {
+        return{
+            transform: [{translateX: x.value}]
+        }
+    })
+
   return (
-    <View style={styles.container} >
-      <View style={[styles.messageContainer, isOnleft("messageContainer")]} >
-        <View style={styles.messageView} >
-            <Text style={[styles.message, isOnleft("message")]} >{message}</Text>
+    <FlingGestureHandler 
+        direction={isLeft ? Directions.RIGHT : Directions.LEFT}
+        onGestureEvent={eventHandler}
+        onHandlerStateChange={({ nativeEvent }) => {
+            if(nativeEvent.state === State.ACTIVE) {
+                onSwipe(message, isLeft)
+            }
+        }}
+    >
+        <Animated.View style={[styles.container, uas]} >
+        <View style={[styles.messageContainer, isOnleft("messageContainer")]} >
+            <View style={styles.messageView} >
+                <Text style={[styles.message, isOnleft("message")]} >{message}</Text>
+            </View>
+            <View style={styles.timeView} >
+                <Text style={[styles.time, isOnleft("time")]} >{time}</Text>
+            </View>
         </View>
-        <View style={styles.timeView} >
-            <Text style={[styles.time, isOnleft("time")]} >{time}</Text>
-        </View>
-      </View>
-    </View>
+        </Animated.View>
+    </FlingGestureHandler>
   )
 }
 

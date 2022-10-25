@@ -4,7 +4,7 @@ import React, {useState, useRef} from 'react';
 import { theme } from '../../Theme';
 import Message from './Message';
 
-const MessagesList = () => {
+const MessagesList = ({ onSwipeToReply }) => {
 
   const [messages, setMessages] = useState([
     {
@@ -75,7 +75,9 @@ const MessagesList = () => {
           key={index} 
           time={message.time} 
           isLeft={message.user !== user.current} 
-          message={message.content}  />
+          message={message.content}  
+          onSwipe={onSwipeToReply}
+        />
       ))}
     </ScrollView>
   )
