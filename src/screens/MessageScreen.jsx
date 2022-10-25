@@ -1,12 +1,24 @@
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
-import React from 'react';
+import React, { useState } from 'react';
 
 import ChatHeader from '../components/messages/ChatHeader';
 import MessagesList from '../components/messages/MessagesList';
 import ChatInput from '../components/messages/ChatInput';
 
 const MessageScreen = ({ navigation, route }) => {
-    const {username, bio, picture, isMuted, isBlocked} = route.params
+    const {username, bio, picture, isMuted, isBlocked} = route.params;
+    const [reply, setReply] = useState("");
+    const [isLeft, setIsLeft] = useState();
+
+    const swipeToReply = (message, isLeft) => {
+      setReply(message.length > 50 ? message.slice(0, 50) + "..." : message);
+      setIsLeft(isLeft)
+    }
+
+    const closeReply = () => {
+      setReply("")
+    }
+
   return (
       <View style={{flex: 1}} >
         <ChatHeader
@@ -15,8 +27,8 @@ const MessageScreen = ({ navigation, route }) => {
             picture={picture}
             onlineStatus="Online"
         />
-        <MessagesList />
-        <ChatInput />
+        <MessagesList onSwipeToReply={swipeToReply} />
+        <ChatInput reply={reply} isLeft={isLeft} closeReply={closeReply} username={username} />
       </View>
   )
 }
