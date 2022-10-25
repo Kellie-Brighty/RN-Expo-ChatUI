@@ -1,11 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image, Modal } from 'react-native'
-import React, {useState} from 'react'
+import React, {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { theme } from '../Theme';
 import ProfileInfo from './ProfileInfo'
 
 const ConversationItem = ({ picture, username, bio, lastMessage, time, isBlocked, isMuted, hasStory, notifications }) => {
 
-  const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
 
   const showStoryCircle = () => {
     if(hasStory) {
@@ -32,7 +34,13 @@ const ConversationItem = ({ picture, username, bio, lastMessage, time, isBlocked
 
   return (
     <View style={styles.container} >
-      <TouchableOpacity style={styles.conversation}>
+      <TouchableOpacity style={styles.conversation} onPress={() => navigation.navigate("MessageScreen", {
+        username,
+        bio,
+        picture,
+        isBlocked,
+        isMuted
+      })} >
         <TouchableOpacity onPress={() => setModalVisible(currentValue => !currentValue)} style={[styles.imageContainer, showStoryCircle()]} >
           <Image style={styles.image} source={picture} />
         </TouchableOpacity>

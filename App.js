@@ -12,6 +12,7 @@ import Header from './src/components/Header';
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
+import MessageScreen from './src/screens/MessageScreen';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -28,6 +29,7 @@ export default function App() {
         <Stack.Screen name='LoginScreen' component={LoginScreen} options={{headerShown: false}} />
         <Stack.Screen name='SignupScreen' component={SignupScreen} options={{headerShown: false}} />
         <Stack.Screen name='HomeScreen' component={HomeNavigator} options={{headerShown: true, header: () => <Header title="Chat"  />}} />
+        <Stack.Screen name="MessageScreen" component={MessageScreen} options={{headerShown: false}} />
       </Stack.Navigator>
       </SafeAreaProvider>)}
     </NavigationContainer>

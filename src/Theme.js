@@ -7,7 +7,11 @@ export const theme = {
         searchText: "#444",
         searchBackground: "#f0f0f0",
         subTitle: "#555",
-        storyBorder: "#00f"
+        storyBorder: "#00f",
+        description: "#9F9F9F",
+        inputBackground: "#f0f0f0",
+        inputText: "#000",
+        messageBackground: "#9c3dc8"
     },
     fonts: {
         regular: "Quicksand-Regular",
