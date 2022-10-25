@@ -6,7 +6,7 @@ import { theme } from '../../Theme';
 
 import EmojiPicker from './emojis/EmojiPicker';
 
-const ChatInput = () => {
+const ChatInput = ({ reply, username, closeReply, isLeft }) => {
 
   const [message, setMessage] = useState();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -14,7 +14,15 @@ const ChatInput = () => {
 
   const showEmojis = () => {
     Animated.timing(heightValue, {
-      toValue: showEmojiPicker ? 400 : 70,
+      toValue: showEmojiPicker ? 400 : reply ? 130 : 70,
+      duration: 500,
+      useNativeDriver: false
+    }).start();
+  }
+
+  const showReply = () => {
+    Animated.timing(heightValue, {
+      toValue: reply ? showEmojiPicker ? 450 : 110 : showEmojiPicker ? 400 : 70,
       duration: 500,
       useNativeDriver: false
     }).start();
@@ -24,8 +32,19 @@ const ChatInput = () => {
     showEmojis()
   }, [showEmojiPicker])
 
+  useEffect(() => {
+    showReply()
+  }, [reply]) 
+
   return (
     <Animated.View style={[styles.container, {height: heightValue }]} >
+      {reply ? <View style={styles.replyContainer} >
+        <TouchableOpacity onPress={closeReply} style={styles.closeReply} >
+          <Icon name="close" color="#000" size={20} />
+        </TouchableOpacity>
+          <Text style={styles.title}>Respond to {isLeft ? username : "Me"}</Text>
+          <Text style={styles.reply} >{reply}</Text>
+      </View> : null}
       <View style={styles.innerContainer} >
         <View style={styles.inputAndMicrophone} >
           <TouchableOpacity style={styles.emoticonButton} onPress={() => setShowEmojiPicker(value => !value)} >
@@ -61,7 +80,26 @@ export default memo(ChatInput)
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    backgroundColor: theme.colors.white
+    backgroundColor: theme.colors.white,
+  },
+  replyContainer: {
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+  },
+  title: {
+    marginTop: 5,
+    fontWeight: 'bolder',
+    fontFamily: theme.fonts.bold
+  },
+  closeReply: {
+    position: 'absolute',
+    right: 10,
+    top: 5
+  },
+  reply: {
+    marginTop: 5
   },
   innerContainer: {
     paddingHorizontal: 10,
